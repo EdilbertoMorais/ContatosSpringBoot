@@ -57,4 +57,13 @@ public class ContatoService {
             throw new RuntimeException("Contato não encontrado!");
         }
     }
+
+    public Contato buscarPorNome(String nome) {
+        Optional<Contato> contatoOptional = contatoRepository.findByNome(nome);
+        if (contatoOptional.isPresent()) {
+            return contatoOptional.get();
+        }else {
+            throw new RuntimeException("Contato não encontrado!");
+        }
+    }
 }
