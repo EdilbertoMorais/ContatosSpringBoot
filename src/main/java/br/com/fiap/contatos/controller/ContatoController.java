@@ -1,5 +1,7 @@
 package br.com.fiap.contatos.controller;
 
+import br.com.fiap.contatos.dto.ContatoCadastroDto;
+import br.com.fiap.contatos.dto.ContatoExibicaoDto;
 import br.com.fiap.contatos.model.Contato;
 import br.com.fiap.contatos.service.ContatoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +20,20 @@ public class ContatoController {
 
     @PostMapping("/contatos")
     @ResponseStatus(HttpStatus.CREATED)
-    public Contato gravar(@RequestBody Contato contato) {
-        return service.gravar(contato);
+    public ContatoExibicaoDto gravar(@RequestBody ContatoCadastroDto contatoCadastroDto) {
+        return service.gravar(contatoCadastroDto);
+    }
+
+    @GetMapping("/contatos/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ContatoExibicaoDto buscarPeloId(@PathVariable Long id) {
+        return service.buscarPeloId(id);
     }
 
     @GetMapping("/contatos")
     @ResponseStatus(HttpStatus.OK)
-    public List<Contato> listarTodosOsContatos() {
-        return service.listarTodosOsContatos();
+    public List<Contato> listarTodos() {
+        return service.listarTodos();
     }
 
     @DeleteMapping("/contatos/{id}")
@@ -43,7 +51,7 @@ public class ContatoController {
 
     @GetMapping("/contatos/{nome}")
     @ResponseStatus(HttpStatus.OK)
-    public Contato buscarPorNome(@PathVariable String nome) {
+    public ContatoExibicaoDto buscarPorNome(@PathVariable String nome) {
         return service.buscarPorNome(nome);
     }
 

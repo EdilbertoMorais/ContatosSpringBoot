@@ -1,7 +1,10 @@
 package br.com.fiap.contatos.service;
 
+import br.com.fiap.contatos.dto.ContatoCadastroDto;
+import br.com.fiap.contatos.dto.ContatoExibicaoDto;
 import br.com.fiap.contatos.model.Contato;
 import br.com.fiap.contatos.repository.ContatoRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,55 +16,53 @@ import java.util.Optional;
 public class ContatoService {
 
     @Autowired
-    private ContatoRepository contatoRepository;
+    private ContatoRepository repository;
 
-    public Contato gravar(Contato contato) {
-        return contatoRepository.save(contato);
+    public ContatoExibicaoDto gravar(ContatoCadastroDto contatoCadastroDto) {
+        Contato contato = new Contato();
+        BeanUtils.copyProperties(contatoCadastroDto, contato);
+        return new ContatoExibicaoDto(repository.save(contato));
     }
 
-    public Contato buscarPorId(Long id) {
-
-        Optional<Contato> contatoOptional = contatoRepository.findById(id);
-
+    public ContatoExibicaoDto buscarPeloId(Long id) {
+        Optional<Contato> contatoOptional = repository.findById(id);
         if (contatoOptional.isPresent()) {
-            return contatoOptional.get();
-        }else {
-            throw new RuntimeException("Contato não encontrado!");
+         return new ContatoExibicaoDto(contatoOptional.get());
+        } else {
+            throw new RuntimeException("Contato NÃO encontrado !!!");
         }
-
-//        return contatoRepository.findById(id).orElse(null);
     }
 
-    public List<Contato> listarTodosOsContatos(){
-        return contatoRepository.findAll();
+    public List<Contato> listarTodos(){
+        return repository.findAll();
     }
 
     public void exluir(Long id) {
-        Optional<Contato> contatoOptional = contatoRepository.findById(id);
+        Optional<Contato> contatoOptional = repository.findById(id);
         if (contatoOptional.isPresent()) {
-            contatoRepository.delete(contatoOptional.get());
+            repository.delete(contatoOptional.get());
         }else {
             throw new RuntimeException("Contato não encontrado!");
         }
     }
 
     public List<Contato> mostrarAniversariantes(LocalDate dataInicial, LocalDate dataFinal) {
-        return contatoRepository.findByDataNascimentoBetween(dataInicial, dataFinal);
+        return repository.findByDataNascimentoBetween(dataInicial, dataFinal);
     }
 
     public Contato atualizar(Contato contato) {
-        Optional<Contato> contatoOptional = contatoRepository.findById(contato.getId());
+        Optional<Contato> contatoOptional = repository.findById(contato.getId());
         if (contatoOptional.isPresent()) {
-            return contatoRepository.save(contato);
+            return repository.save(contato);
         }else {
             throw new RuntimeException("Contato não encontrado!");
         }
     }
 
-    public Contato buscarPorNome(String nome) {
-        Optional<Contato> contatoOptional = contatoRepository.findByNome(nome);
+    public ContatoExibicaoDto buscarPorNome(String nome) {
+        Optional<Contato> contatoOptional = repository.findByNome(nome);
         if (contatoOptional.isPresent()) {
-            return contatoOptional.get();
+            return new ContatoExibicaoDto(contatoOptional.get());
         }else {
             throw new RuntimeException("Contato não encontrado!");
         }
