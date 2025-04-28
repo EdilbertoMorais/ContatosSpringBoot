@@ -16,7 +16,7 @@ public class ApplicationExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> manuserArgumentosInvalidos(MethodArgumentNotValidException erro) {
+    public Map<String, String> manusearArgumentosInvalidos(MethodArgumentNotValidException erro) {
         Map<String, String> mapaDeErro = new HashMap<>();
         List<FieldError> campos = erro.getBindingResult().getFieldErrors();
 

@@ -9,7 +9,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,33 +49,29 @@ public class ContatoService {
         }
     }
 
-    public List<ContatoExibicaoDto> mostrarAniversariantes(LocalDate dataInicial, LocalDate dataFinal) {
-        return repository.findByDataNascimentoBetween(dataInicial, dataFinal)
-                .stream()
-                .map(ContatoExibicaoDto::new)
-                .collect(Collectors.toList());
+    public Contato atualizar(Contato contato) {
+        Optional<Contato> contatoOptional = repository.findById(contato.getId());
+        if (contatoOptional.isPresent()) {
+            return repository.save(contato);
+        }else {
+            throw new RuntimeException("Contato não encontrado!");
+        }
     }
 
-//    public Contato atualizar(Contato contato) {
-//        Optional<Contato> contatoOptional = repository.findById(contato.getId());
-//        if (contatoOptional.isPresent()) {
-//            return repository.save(contato);
-//        }else {
-//            throw new RuntimeException("Contato não encontrado!");
-//        }
+//    public ContatoExibicaoDto atualizar(Long id, ContatoCadastroDto contatoCadastroDto) {
+//        Contato contato = repository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Contato não encontrado com o ID: " + id));
+//        BeanUtils.copyProperties(contatoCadastroDto, contato);
+//        Contato contatoAtualizado = repository.save(contato);
+//        return new ContatoExibicaoDto(contatoAtualizado);
 //    }
 
-    public ContatoExibicaoDto atualizar(Long id, ContatoCadastroDto contatoCadastroDto) {
-        Contato contato = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Contato não encontrado com o ID: " + id));
-        BeanUtils.copyProperties(contatoCadastroDto, contato);
-        Contato contatoAtualizado = repository.save(contato);
-        return new ContatoExibicaoDto(contatoAtualizado);
-    }
-
-    public ContatoExibicaoDto buscarPorNome(String nome) {
-        Optional<Contato> contatoOptional = repository.findByNome(nome);
-        return contatoOptional.map(ContatoExibicaoDto::new)
-                .orElseThrow(() -> new RuntimeException("Contato não encontrado!"));
+    public ContatoExibicaoDto buscarContatoPeloNome(String nome){
+        Optional<Contato> contatoOptional = repository.buscarContatoPeloNome(nome);
+        if (contatoOptional.isPresent()) {
+            return new ContatoExibicaoDto(contatoOptional.get());
+        } else {
+            throw new UsuarioNaoEncontradoException("Contato NÃO encontrado!!!");
+        }
     }
 }
