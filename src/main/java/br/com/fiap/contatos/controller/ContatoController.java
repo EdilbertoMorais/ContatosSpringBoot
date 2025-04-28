@@ -6,10 +6,12 @@ import br.com.fiap.contatos.model.Contato;
 import br.com.fiap.contatos.service.ContatoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -60,4 +62,20 @@ public class ContatoController {
     public ContatoExibicaoDto buscarContatoPorNome(@RequestParam String nome){
         return service.buscarContatoPeloNome(nome);
     }
+
+    //api/contatos?dataInicio=2000-10-05&dataFim=2025-04-28 usando String query param
+    @GetMapping(value = "/contatos", params = {"dataInicio", "dataFim"})
+    public List<ContatoExibicaoDto> buscarAniversariantes(
+            @RequestParam LocalDate dataInicio,
+            @RequestParam LocalDate dataFim
+    ){
+        return service.listarAniversariantesDoPeriodo(dataInicio, dataFim);
+    }
+
+    //api/contatos?email=teste@teste.com
+    @GetMapping(value = "/contatos", params = "email")
+    public ContatoExibicaoDto buscarContatoPeloEmail(@RequestParam String email){
+        return service.buscarContatoPeloEmail(email);
+    }
+
 }

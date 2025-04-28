@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -73,5 +74,21 @@ public class ContatoService {
         } else {
             throw new UsuarioNaoEncontradoException("Contato NÃO encontrado!!!");
         }
+    }
+
+    public ContatoExibicaoDto buscarContatoPeloEmail(String email){
+        Optional<Contato> contatoOptional = repository.findByEmail(email);
+        if (contatoOptional.isPresent()) {
+            return new ContatoExibicaoDto(contatoOptional.get());
+        } else {
+            throw new UsuarioNaoEncontradoException("Contato NÃO encontrado!!!");
+        }
+    }
+
+    public List<ContatoExibicaoDto> listarAniversariantesDoPeriodo(LocalDate dataInicio, LocalDate dataFim){
+        return repository.listarAniversariantesDoPeriodo(dataInicio, dataFim)
+                .stream()
+                .map(ContatoExibicaoDto::new)
+                .toList();
     }
 }
