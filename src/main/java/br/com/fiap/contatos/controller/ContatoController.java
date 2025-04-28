@@ -2,8 +2,8 @@ package br.com.fiap.contatos.controller;
 
 import br.com.fiap.contatos.dto.ContatoCadastroDto;
 import br.com.fiap.contatos.dto.ContatoExibicaoDto;
-import br.com.fiap.contatos.model.Contato;
 import br.com.fiap.contatos.service.ContatoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +20,12 @@ public class ContatoController {
 
     @PostMapping("/contatos")
     @ResponseStatus(HttpStatus.CREATED)
-    public ContatoExibicaoDto gravar(@RequestBody ContatoCadastroDto contatoCadastroDto) {
+    //a annotation @Valid deve ser inserida para que as validações do CadastroDto sejam aplicadas
+    public ContatoExibicaoDto gravar(@RequestBody @Valid ContatoCadastroDto contatoCadastroDto) {
         return service.gravar(contatoCadastroDto);
     }
 
-    @GetMapping("/contatos/{id}")
+    @GetMapping("/contatos/id/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ContatoExibicaoDto buscarPeloId(@PathVariable Long id) {
         return service.buscarPeloId(id);
@@ -32,7 +33,7 @@ public class ContatoController {
 
     @GetMapping("/contatos")
     @ResponseStatus(HttpStatus.OK)
-    public List<Contato> listarTodos() {
+    public List<ContatoExibicaoDto> listarTodos() {
         return service.listarTodos();
     }
 
@@ -42,12 +43,11 @@ public class ContatoController {
         service.exluir(id);
     }
 
-    @PutMapping("/contatos")
+    @PutMapping("/contatos/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Contato atualizar(@RequestBody Contato contato) {
-        return service.atualizar(contato);
+    public ContatoExibicaoDto atualizar(@PathVariable Long id, @RequestBody @Valid ContatoCadastroDto contatoCadastroDto) {
+        return service.atualizar(id, contatoCadastroDto);
     }
-
 
     @GetMapping("/contatos/{nome}")
     @ResponseStatus(HttpStatus.OK)
@@ -57,8 +57,8 @@ public class ContatoController {
 
     @GetMapping("/contatos/{dataInicial}/{dataFinal}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Contato> mostrarAniversariantes(@PathVariable LocalDate dataInicial,
-                                                @PathVariable LocalDate dataFinal) {
+    public List<ContatoExibicaoDto> mostrarAniversariantes(@PathVariable LocalDate dataInicial,
+                                                           @PathVariable LocalDate dataFinal) {
         return service.mostrarAniversariantes(dataInicial, dataFinal);
     }
 }
