@@ -6,8 +6,8 @@ import br.com.fiap.contatos.model.Contato;
 import br.com.fiap.contatos.service.ContatoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +36,8 @@ public class ContatoController {
 
     @GetMapping("/contatos")
     @ResponseStatus(HttpStatus.OK)
-    public List<ContatoExibicaoDto> listarTodos() {
-        return service.listarTodos();
+    public Page<ContatoExibicaoDto> listarTodos(Pageable paginacao) {
+        return service.listarTodos(paginacao);
     }
 
     @DeleteMapping("/contatos/{id}")

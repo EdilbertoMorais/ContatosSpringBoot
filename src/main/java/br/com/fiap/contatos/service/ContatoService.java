@@ -7,12 +7,13 @@ import br.com.fiap.contatos.model.Contato;
 import br.com.fiap.contatos.repository.ContatoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ContatoService {
@@ -35,11 +36,18 @@ public class ContatoService {
         }
     }
 
-    public List<ContatoExibicaoDto> listarTodos() {
-        return repository.findAll().stream()
-                .map(ContatoExibicaoDto::new)
-                .collect(Collectors.toList());
+    //implementando a paginação do retorno da api
+    public Page<ContatoExibicaoDto> listarTodos(Pageable paginacao) {
+        return repository
+                .findAll(paginacao)
+                .map(ContatoExibicaoDto::new);
     }
+
+//    public List<ContatoExibicaoDto> listarTodos() {
+//        return repository.findAll().stream()
+//                .map(ContatoExibicaoDto::new)
+//                .collect(Collectors.toList());
+//    }
 
     public void exluir(Long id) {
         Optional<Contato> contatoOptional = repository.findById(id);

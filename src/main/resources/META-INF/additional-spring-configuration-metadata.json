@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "flyway.url",
+      "type": "java.lang.String",
+      "description": "Description for flyway.url."
+    },
+    {
+      "name": "flyway.user",
+      "type": "java.lang.String",
+      "description": "Description for flyway.user."
+    },
+    {
+      "name": "flyway.password",
+      "type": "java.lang.String",
+      "description": "Description for flyway.password."
+    }
+  ] }
